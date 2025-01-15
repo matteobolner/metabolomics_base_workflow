@@ -1,10 +1,14 @@
 from metabotk import MetaboTK
 import pandas as pd
 
-dataset = MetaboTK().io.from_excel(snakemake.input.dataset, sample_id_column="ident")
+dataset = MetaboTK().io.from_excel(
+    snakemake.input.dataset,
+    sample_id_column=snakemake.config["sample_id_column"],
+    metabolite_id_column=snakemake.config["metabolite_id_column"],
+)
 
 ranking = dataset.fs.boruta(
-    y_column="H_L",
+    y_column=snakemake.config["group_column"],
     kind="classifier",
     threads=1,
     random_state=int(snakemake.wildcards.seed_boruta),
