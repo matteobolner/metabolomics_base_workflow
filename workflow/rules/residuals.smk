@@ -1,6 +1,6 @@
 rule get_residuals:
     input:
-        dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
+        dataset=rules.normalize.output.normalized
     output:
         residuals="data/residuals/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
     run:

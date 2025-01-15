@@ -2,6 +2,9 @@
 raw_dataset: "resources/test_dataset_fecal.xlsx"
 sample_id_column: "SAMPLE NAME"
 metabolite_id_column: "CHEMICAL ID"
+sample_metadata_sheet: "Sample Meta Data"
+chemical_annotation_sheet: "Chemical Annotation"
+data_sheet: "Data"
 
 #IMPUTATION:
 mice_imputation_covariates: ['AGE','BREED','GENDER']
