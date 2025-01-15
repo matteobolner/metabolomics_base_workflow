@@ -1,0 +1,14 @@
+#DATASET
+raw_dataset: "resources/test_dataset_fecal.xlsx"
+sample_id_column: "SAMPLE NAME"
+metabolite_id_column: "CHEMICAL ID"
+
+#IMPUTATION:
+mice_imputation_covariates: ['AGE','BREED','GENDER']
+mice_seeds: [1000,2000,3000,4000,5000]
+imputation_cycles: [1,2,3,4,5]
+
+#RESIDUALS
+lm_formula: 'AGE + C(GENDER) + C(BREED)' # 
+
+feature_selection_seeds: [10,20,30,40,50]

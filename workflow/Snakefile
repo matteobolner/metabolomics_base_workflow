@@ -1,0 +1,10 @@
+include: "rules/common.smk"
+include: "rules/setup.smk"
+include: "rules/imputation.smk"
+include: "rules/residuals.smk"
+include: "rules/feature_selection.smk"
+
+
+rule all:
+    input:
+        "tables/feature_selection/boruta/summary_with_cv.tsv"
