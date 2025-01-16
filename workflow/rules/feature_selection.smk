@@ -25,7 +25,7 @@ rule merge_boruta_runs:
 
 rule prepare_CV_datasets:
     input:
-        dataset=rules.get_residuals.output.residuals,
+        dataset=rules.normalize.output.normalized,
     output:
         directory=directory(
             "data/residuals/seed_{mice_seed}/imputation_{imp_cycle}_CV/"
@@ -38,14 +38,14 @@ rule prepare_CV_datasets:
         dataset = MetaboTK().io.from_excel(
             input.dataset,
             sample_id_column=config["sample_id_column"],
-            metabolite_id_column=["metabolite_id_column"],
+            metabolite_id_column=config["metabolite_id_column"],
         )
         split_kfold = dataset.fs.stratified_kfold(
             n_splits=10, stratification_column="H_L", output_dir=output.directory
         )
 
 
-rule boruta_CV:
+rule boruta_CiV:
     input:
         dataset="data/residuals/seed_{mice_seed}/imputation_{imp_cycle}_CV/{fold}_train.xlsx",
     output:
