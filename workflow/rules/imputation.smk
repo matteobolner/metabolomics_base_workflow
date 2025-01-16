@@ -25,7 +25,7 @@ rule impute:
     params:
         covariates=get_mice_covariates(),
         metabolite_id_column=config["metabolite_id_column"],
-        sample_id_column=config["sample_id_column"]
+        super_pathway_column=config["super_pathway_column"]
     conda:
         "../envs/imputation.yaml"
     shell:
