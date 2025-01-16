@@ -8,5 +8,4 @@ dependencies:
  - r-tidyr
  - r-tibble
  - r-readr
- - r-tools
  - r-optparse
