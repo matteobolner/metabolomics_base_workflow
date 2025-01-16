@@ -19,7 +19,7 @@ rule impute:
     input:
         data=rules.prepare_dataset_for_imputation.output.data_metadata,
         chemical_annotation=rules.prepare_dataset_for_imputation.output.chemical_annotation,
-        script=rules.download_imputation_script.output.script
+        script=rules.download_and_setup_imputation_script.output.script
     output:
         imputed="data/imputation/imputed/{mice_seed}.tsv",
     params:
