@@ -11,4 +11,3 @@ rule pca:
         group_column=config["group_column"],
     script:
         "../scripts/pca/pca.py"
-

@@ -11,21 +11,22 @@ rule prepare_dataset_for_imputation:
 
 rule download_imputation_script:
     output:
-        script="workflow/scripts/imputation/metabolomics_missing_data_imputation/impute.R" 
+        script="workflow/scripts/imputation/metabolomics_missing_data_imputation/impute.R",
     shell:
         "curl https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/impute.R -o {output.script}"
+
 
 rule impute:
     input:
         data=rules.prepare_dataset_for_imputation.output.data_metadata,
         chemical_annotation=rules.prepare_dataset_for_imputation.output.chemical_annotation,
-        script=rules.download_imputation_script.output.script
+        script=rules.download_imputation_script.output.script,
     output:
         imputed="data/imputation/imputed/{mice_seed}.tsv",
     params:
         covariates=get_mice_covariates(),
         metabolite_id_column=config["metabolite_id_column"],
-        super_pathway_column=config["super_pathway_column"]
+        super_pathway_column=config["super_pathway_column"],
     conda:
         "../envs/imputation.yaml"
     shell:
