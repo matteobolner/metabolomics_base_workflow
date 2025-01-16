@@ -10,7 +10,7 @@ def get_mice_covariates():
 
 
 def setup_dataset(file_path):
-    dataset = MetaboTK.io.from_excel(
+    dataset = MetaboTK().io.from_excel(
         file_path,
         sample_id_column=config["sample_id_column"],
         metabolite_id_column=config["metabolite_id_column"],
