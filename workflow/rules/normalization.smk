@@ -5,7 +5,7 @@ rule normalize:
         normalized="data/normalization/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
     run:
         dataset = MetaboTK().io.from_excel(
-            file_path,
+            input.dataset,
             sample_id_column=config["sample_id_column"],
             metabolite_id_column=config["metabolite_id_column"],
             sample_metadata_sheet=config["sample_metadata_sheed"],
