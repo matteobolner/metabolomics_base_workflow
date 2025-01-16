@@ -4,6 +4,7 @@ rule normalize:
     output:
         normalized="data/normalization/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
     run:
+        import numpy as np
         dataset=setup_dataset(input.dataset)
         normalization_method = config["normalization_method"]
         if normalization_method == "None":
