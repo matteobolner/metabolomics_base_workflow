@@ -14,7 +14,7 @@ def setup_dataset(file_path):
         file_path,
         sample_id_column=config["sample_id_column"],
         metabolite_id_column=config["metabolite_id_column"],
-        sample_metadata_sheet=config["sample_metadata_sheed"],
+        sample_metadata_sheet=config["sample_metadata_sheet"],
         chemical_annotation_sheet=config["chemical_annotation_sheet"],
         data_sheet=config["data_sheet"],
     )

@@ -4,15 +4,7 @@ rule normalize:
     output:
         normalized="data/normalization/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
     run:
-        dataset = MetaboTK().io.from_excel(
-            input.dataset,
-            sample_id_column=config["sample_id_column"],
-            metabolite_id_column=config["metabolite_id_column"],
-            sample_metadata_sheet=config["sample_metadata_sheed"],
-            chemical_annotation_sheet=config["chemical_annotation_sheet"],
-            data_sheet=config["data_sheet"],
-        )
-
+        setup_dataset()
         normalization_method = config["normalization method"]
         if normalization_method == "None":
             dataset.io.save_excel(output.normalized)
