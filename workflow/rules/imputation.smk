@@ -24,10 +24,12 @@ rule impute:
         imputed="data/imputation/imputed/{mice_seed}.tsv",
     params:
         covariates=get_mice_covariates(),
+        metabolite_id_column=config["metabolite_id_column"],
+        sample_id_column=config["sample_id_column"]
     conda:
         "../envs/imputation.yaml"
     shell:
-        "Rscript {input.script} -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column {config['metabolite_id_column']} --super_pathway_column {config['super_pathway_column']}"
+        "Rscript {input.script} -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column {params.metabolite_id_column]} --super_pathway_column {params.'super_pathway_column'}"
 
 
 rule split_imputed_datasets:
