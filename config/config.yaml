@@ -10,6 +10,7 @@ data_sheet: "Data"
 mice_imputation_covariates: ['AGE','BREED','GENDER']
 mice_seeds: [1000,2000,3000,4000,5000]
 imputation_cycles: [1,2,3,4,5]
+super_pathway_column: "SUPER PATHWAY"
 
 #RESIDUALS
 lm_formula: 'AGE + C(GENDER) + C(BREED)' # 

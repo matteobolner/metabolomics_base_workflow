@@ -27,7 +27,7 @@ rule impute:
     conda:
         "../envs/imputation.yaml"
     shell:
-        "Rscript {input.script} -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column 'CHEMICAL ID' --super_pathway_column 'SUPER PATHWAY'"
+        "Rscript {input.script} -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column {config["metabolite_id_column"]} --super_pathway_column {config["super_pathway_column"]}"
 
 
 rule split_imputed_datasets:
