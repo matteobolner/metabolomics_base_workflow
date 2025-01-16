@@ -9,16 +9,23 @@ rule prepare_dataset_for_imputation:
         "../scripts/imputation/prepare_data_for_imputation.py"
 
 
+rule download_and_setup_imputation_script:
+    output:
+        script=workflow/scripts/imputation/metabolomics_missing_data_imputation/impute.R 
+    shell:
+        "curl https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/install_required_libraries.R -o setup_libraries.R && Rscript setup_libraries.R && rm setup_libraries.R && wget https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/impute.R"
+
 rule impute:
     input:
         data=rules.prepare_dataset_for_imputation.output.data_metadata,
         chemical_annotation=rules.prepare_dataset_for_imputation.output.chemical_annotation,
+        script=rules.download_imputation_script.output.script
     output:
         imputed="data/imputation/imputed/{mice_seed}.tsv",
     params:
         covariates=get_mice_covariates(),
     shell:
-        "Rscript workflow/scripts/imputation/metabolomics_missing_data_imputation/impute.R -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column 'CHEMICAL ID' --super_pathway_column 'SUPER PATHWAY'"
+        "Rscript {input.script} -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column 'CHEMICAL ID' --super_pathway_column 'SUPER PATHWAY'"
 
 
 rule split_imputed_datasets:
