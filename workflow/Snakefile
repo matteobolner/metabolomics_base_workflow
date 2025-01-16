@@ -6,6 +6,6 @@ include: "rules/residuals.smk"
 include: "rules/feature_selection.smk"
 
 
-rule all:
+rule feature_selection_workflow:
     input:
         "tables/feature_selection/boruta/summary_with_cv.tsv",
