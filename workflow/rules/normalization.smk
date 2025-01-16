@@ -5,7 +5,7 @@ rule normalize:
         normalized="data/normalization/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
     run:
         dataset=setup_dataset(input.dataset)
-        normalization_method = config["normalization method"]
+        normalization_method = config["normalization_method"]
         if normalization_method == "None":
             dataset.io.save_excel(output.normalized)
         elif normalization_method == "log":
