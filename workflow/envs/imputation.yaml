@@ -1,0 +1,12 @@
+channels:
+ - r
+dependencies:
+ - r
+ - r-mice
+ - r-readxl
+ - r-dplyr
+ - r-tidyr
+ - r-tibble
+ - r-readr
+ - r-tools
+ - r-optparse
