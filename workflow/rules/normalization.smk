@@ -6,7 +6,7 @@ rule normalize:
     run:
         dataset=setup_dataset(input.dataset)
         normalization_method = config["normalization method"]
-        if normalization_method = "None":
+        if normalization_method == "None":
             dataset.io.save_excel(output.normalized)
         elif normalization_method == "log":
             dataset.data=dataset.data.apply(lambda x:np.log(x))
