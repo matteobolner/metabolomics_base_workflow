@@ -11,9 +11,9 @@ rule prepare_dataset_for_imputation:
 
 rule download_and_setup_imputation_script:
     output:
-        script=workflow/scripts/imputation/metabolomics_missing_data_imputation/impute.R 
+        script="workflow/scripts/imputation/metabolomics_missing_data_imputation/impute.R" 
     shell:
-        "curl https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/install_required_libraries.R -o setup_libraries.R && Rscript setup_libraries.R && rm setup_libraries.R && wget https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/impute.R"
+        "curl https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/install_required_libraries.R -o setup_libraries.R && Rscript setup_libraries.R && rm setup_libraries.R && curl https://raw.githubusercontent.com/matteobolner/metabolomics_missing_data_imputation/refs/heads/main/impute.R -O {output.script}"
 
 rule impute:
     input:
