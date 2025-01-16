@@ -25,7 +25,7 @@ rule impute:
     params:
         covariates=get_mice_covariates(),
     conda:
-        "../envs/imputation.yaml"
+        "envs/imputation.yaml"
     shell:
         "Rscript {input.script} -d {input.data} -c {input.chemical_annotation} -o {output.imputed} -s {wildcards.mice_seed} -m pmm -n 5 -r 0.25 -u 5 -a {params.covariates} --metabolite_id_column 'CHEMICAL ID' --super_pathway_column 'SUPER PATHWAY'"
 
