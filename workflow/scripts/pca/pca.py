@@ -26,7 +26,7 @@ selected = dataset.chemical_annotation[
 ]
 dataset = dataset.ops.subset("metabolites", ids=selected.index)
 
-new_title = snakemake.wildcards.trait
+new_title = snakemake.params.hue_title
 
 if len(dataset.metabolites) > 3:
     pca, pca_object = dataset.dimred.get_pca(n_components=3, get_pca_object=True)

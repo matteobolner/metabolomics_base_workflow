@@ -9,5 +9,6 @@ rule pca:
         explained_variance="tables/pca/selected_{selected}_{cv_selected}_explained_variance.tsv",
     params:
         group_column=config["group_column"],
+        hue_title=config["group_name"]
     script:
         "../scripts/pca/pca.py"
