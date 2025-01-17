@@ -71,7 +71,7 @@ rule merge_boruta_runs_CV:
         "../scripts/feature_selection/boruta/merge_boruta_runs.py"
 
 
-rule summarize_boriuta:
+rule summarize_boruta:
     input:
         cv="data/feature_selection/boruta/merged/long_data_CV.tsv",
         long_df="data/feature_selection/boruta/merged/long_data.tsv",
@@ -81,3 +81,19 @@ rule summarize_boriuta:
         summary="tables/feature_selection/boruta/summary_with_cv.tsv",
     script:
         "../scripts/feature_selection/boruta/summarize.py"
+
+rule annotate_dataset_with_boruta_results:
+        input:
+            summary=rules.summarize_boruta.output.summary,
+            dataset=expand(rules.get_residuals.output.residuals, mice_seed=mice_seeds[0], imp_cycle=imputation_cycles[0])
+        output:
+            dataset="results/feature_selection/boruta/annotated_dataset.xlsx"
+        run:
+            dataset=MetaboTK().io.from_excel(input.dataset)
+            summary=pd.read_table(input.summary)
+            summary.columns=["boruta_"+i for i in summary.columns]
+            summary=summary.rename(columns={"boruta_metabolite":config["metabolite_id_column"]})
+            dataset.chemical_annotation=dataset.chemical_annotation.merge(summary, left_index=True, right_on=config["metabolite_id_column"])
+            dataset.io.save_excel(output.dataset)
+
+
