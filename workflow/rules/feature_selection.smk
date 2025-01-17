@@ -25,7 +25,7 @@ rule merge_boruta_runs:
 
 rule prepare_CV_datasets:
     input:
-        dataset=rules.normalize.output.normalized,
+        dataset=rules.get_residuals.output.residuals,
     output:
         directory=directory(
             "data/residuals/seed_{mice_seed}/imputation_{imp_cycle}_CV/"
@@ -45,7 +45,7 @@ rule prepare_CV_datasets:
         )
 
 
-rule boruta_CiV:
+rule boruta_CV:
     input:
         dataset="data/residuals/seed_{mice_seed}/imputation_{imp_cycle}_CV/{fold}_train.xlsx",
     output:
