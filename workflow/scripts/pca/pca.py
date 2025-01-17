@@ -15,8 +15,14 @@ dataset = MetaboTK().io.from_excel(
 )
 
 selected = dataset.chemical_annotation[
-    (dataset.chemical_annotation >= int(snakemake.wildcards.selected))
-    & (dataset.chemical_annotation >= int(snakemake.wildcards.cv_selected))
+    (
+        dataset.chemical_annotation["boruta_Confirmed"]
+        >= int(snakemake.wildcards.selected)
+    )
+    & (
+        dataset.chemical_annotation["boruta_Confirmed_CV"]
+        >= int(snakemake.wildcards.cv_selected)
+    )
 ]
 dataset = dataset.ops.subset("metabolites", ids=selected.index)
 
