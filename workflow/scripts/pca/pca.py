@@ -20,7 +20,7 @@ selected = dataset.chemical_annotation[
         >= int(snakemake.wildcards.selected)
     )
     & (
-        dataset.chemical_annotation["boruta_Confirmed_CV"]
+        dataset.chemical_annotation["boruta_CV_confirmed"]
         >= int(snakemake.wildcards.cv_selected)
     )
 ]
