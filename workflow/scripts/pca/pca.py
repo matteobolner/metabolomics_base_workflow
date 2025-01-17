@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 group_column = snakemake.params.group_column
 
 dataset = MetaboTK().io.from_excel(
-    file_path,
+    snakemake.input.dataset,
     sample_id_column=snakemake.config["sample_id_column"],
     metabolite_id_column=snakemake.config["metabolite_id_column"],
     sample_metadata_sheet=snakemake.config["sample_metadata_sheet"],
