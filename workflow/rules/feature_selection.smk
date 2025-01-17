@@ -89,8 +89,7 @@ rule annotate_dataset_with_boruta_results:
         output:
             dataset="results/feature_selection/boruta/annotated_dataset.xlsx"
         run:
-            print(input.dataset)
-            dataset=MetaboTK().io.from_excel(input.dataset[0])
+            dataset=setup_dataset(input.dataset[0])
             summary=pd.read_table(input.summary)
             summary.columns=["boruta_"+i for i in summary.columns]
             summary=summary.rename(columns={"boruta_metabolite":config["metabolite_id_column"]})
