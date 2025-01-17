@@ -8,4 +8,4 @@ include: "rules/feature_selection.smk"
 
 rule feature_selection_workflow:
     input:
-        "results/feature_selection/boruta/annotated_dataset.xlsx",
+        expand("tables/pca/selected_{selected}_{cv_selected}.tsv", selected=[0,125], cv_selected=[0,1250])

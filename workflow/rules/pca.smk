@@ -1,6 +1,6 @@
 rule pca:
     input:
-        dataset="results/{trait}/dataset_with_boruta_AUC_mw.xlsx",
+        dataset=rules.annotate_dataset_with_boruta_results.output.dataset
     output:
         pca="tables/pca/selected_{selected}_{cv_selected}.tsv",
         pca_figure="figures/pca/selected_{selected}_{cv_selected}.png",
