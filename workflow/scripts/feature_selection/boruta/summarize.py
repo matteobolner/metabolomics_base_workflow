@@ -9,7 +9,7 @@ cv_df["metabolite"] = cv["metabolite"].unique()
 
 cv_long_df = []
 
-for name, group in cv.groupby(by=["seed", "imputation_cycle", "seed_boruta"]):
+for name, group in cv.groupby(by=["mice_seed", "imputation_cycle", "boruta_seed"]):
     print(name)
     name = f"mice_{name[0]}_{name[1]}_boruta_{name[2]}_CV"
     counts = {}
@@ -18,7 +18,7 @@ for name, group in cv.groupby(by=["seed", "imputation_cycle", "seed_boruta"]):
     cv_df[name] = cv_df["metabolite"].apply(lambda x: counts[x])
 
 cv_counts = pd.DataFrame(
-    cv.groupby(by=["metabolite", "seed", "imputation_cycle", "seed_boruta"])[
+    cv.groupby(by=["metabolite", "mice_seed", "imputation_cycle", "boruta_seed"])[
         "decision"
     ].value_counts()
 ).reset_index()
@@ -28,7 +28,7 @@ cv_counts = cv_counts.rename(columns={"count": "CV_confirmed"})
 
 long_df = long_df.merge(
     cv_counts,
-    on=["metabolite", "seed", "imputation_cycle", "seed_boruta"],
+    on=["metabolite", "mice_seed", "imputation_cycle", "boruta_seed"],
     how="left",
 )
 long_df["CV_confirmed"] = long_df["CV_confirmed"].fillna(0).astype(int)
