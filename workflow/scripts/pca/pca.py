@@ -5,22 +5,18 @@ import matplotlib.pyplot as plt
 
 group_column = snakemake.params.group_column
 
-    dataset = MetaboTK().io.from_excel(
-        file_path,
-        sample_id_column=snakemake.config["sample_id_column"],
-        metabolite_id_column=snakemake.config["metabolite_id_column"],
-        sample_metadata_sheet=snakemake.config["sample_metadata_sheet"],
-        chemical_annotation_sheet=snakemake.config["chemical_annotation_sheet"],
-        data_sheet=snakemake.config["data_sheet"],
-    )
+dataset = MetaboTK().io.from_excel(
+    file_path,
+    sample_id_column=snakemake.config["sample_id_column"],
+    metabolite_id_column=snakemake.config["metabolite_id_column"],
+    sample_metadata_sheet=snakemake.config["sample_metadata_sheet"],
+    chemical_annotation_sheet=snakemake.config["chemical_annotation_sheet"],
+    data_sheet=snakemake.config["data_sheet"],
+)
 
 selected = dataset.chemical_annotation[
-    (
-        >= int(snakemake.wildcards.selected)
-    )
-    & (
-        >= int(snakemake.wildcards.cv_selected)
-    )
+    (dataset.chemical_annotation >= int(snakemake.wildcards.selected))
+    & (dataset.chemical_annotation >= int(snakemake.wildcards.cv_selected))
 ]
 dataset = dataset.ops.subset("metabolites", ids=selected.index)
 
