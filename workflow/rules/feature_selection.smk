@@ -82,18 +82,25 @@ rule summarize_boruta:
     script:
         "../scripts/feature_selection/boruta/summarize.py"
 
+
 rule annotate_dataset_with_boruta_results:
-        input:
-            summary=rules.summarize_boruta.output.summary,
-            dataset=expand(rules.get_residuals.output.residuals, mice_seed=mice_seeds[0], imp_cycle=imputation_cycles[0])
-        output:
-            dataset="results/feature_selection/boruta/annotated_dataset.xlsx"
-        run:
-            dataset=setup_dataset(input.dataset[0])
-            summary=pd.read_table(input.summary)
-            summary.columns=["boruta_"+i for i in summary.columns]
-            summary=summary.rename(columns={"boruta_metabolite":config["metabolite_id_column"]})
-            dataset.chemical_annotation=dataset.chemical_annotation.merge(summary, left_index=True, right_on=config["metabolite_id_column"])
-            dataset.io.save_excel(output.dataset)
-
-
+    input:
+        summary=rules.summarize_boruta.output.summary,
+        dataset=expand(
+            rules.get_residuals.output.residuals,
+            mice_seed=mice_seeds[0],
+            imp_cycle=imputation_cycles[0],
+        ),
+    output:
+        dataset="results/feature_selection/boruta/annotated_dataset.xlsx",
+    run:
+        dataset = setup_dataset(input.dataset[0])
+        summary = pd.read_table(input.summary)
+        summary.columns = ["boruta_" + i for i in summary.columns]
+        summary = summary.rename(
+            columns={"boruta_metabolite": config["metabolite_id_column"]}
+        )
+        dataset.chemical_annotation = dataset.chemical_annotation.merge(
+            summary, left_index=True, right_on=config["metabolite_id_column"]
+        ).set_index(config["metabolite_id_column"])
+        dataset.io.save_excel(output.dataset)

@@ -8,5 +8,4 @@ include: "rules/feature_selection.smk"
 
 rule feature_selection_workflow:
     input:
-        "results/feature_selection/boruta/annotated_dataset.xlsx"
-
+        "results/feature_selection/boruta/annotated_dataset.xlsx",
