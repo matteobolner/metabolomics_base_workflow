@@ -1,6 +1,16 @@
+rule remove_outliers:
+    input:
+        dataset=config["raw_dataset"],
+    output:
+        missing_removed="data/initial_stats/missing_removed.tsv",
+        dataset="data/imputation/input/clean_raw_dataset.xlsx",
+    script:
+        "../scripts/outliers/remove_outliers.py"
+
+
 rule prepare_dataset_for_imputation:
     input:
-        dataset="data/imputation/input/clean_raw_dataset.xlsx",
+        dataset=rules.remove_outliers.output.dataset
     output:
         data_metadata="data/imputation/input/data_metadata.tsv",
         chemical_annotation="data/imputation/input/chemical_annotation.tsv",

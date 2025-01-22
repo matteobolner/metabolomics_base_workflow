@@ -1,10 +1,28 @@
 include: "rules/common.smk"
+
+module imputation_workflow:
+    snakefile:
+        github(
+            "matteobolner/metabolomics_imputation_workflow",
+            path="workflow/Snakefile",
+            branch="main",
+        )
+    config: config
+
+
+
 include: "rules/setup.smk"
-include: "rules/imputation.smk"
 include: "rules/normalization.smk"
 include: "rules/residuals.smk"
 include: "rules/feature_selection.smk"
 include: "rules/pca.smk"
+use rule imputation_workflow from imputation_workflow
+
+rule all:
+    input:
+        rules.feature_selection_workflow.input,
+
+
 
 rule feature_selection_workflow:
     input:
