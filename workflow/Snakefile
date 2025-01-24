@@ -1,29 +1,31 @@
 include: "rules/common.smk"
-
-module imputation_workflow:
-    snakefile:
-        github(
-            "matteobolner/metabolomics_imputation_workflow",
-            path="workflow/Snakefile",
-            branch="main",
-        )
-    config: config
-
-
-
-include: "rules/setup.smk"
+include: "rules/imputation.smk"
 include: "rules/normalization.smk"
 include: "rules/residuals.smk"
 include: "rules/feature_selection.smk"
-include: "rules/pca.smk"
-use rule imputation_workflow from imputation_workflow
+
+
+# include: "rules/stats.smk"
+
 
 rule all:
     input:
-        rules.feature_selection_workflow.input,
+        "tables/feature_selection/boruta/summary.tsv"
+        #"data/feature_selection/boruta/mice_seed_1000/imp_cycle_1/summary.tsv",
+        #"data/imputation/imputed/seed_1000/imputation_1_no_missing.xlsx",
+        #expand(
+        #    mice_seed=1000,
+        #    imputation_cycle=1,
+        #),
+        ##"figures/initial_stats/pca_grid.png"
+        #rules.imputation_workflow.input
 
 
-
-rule feature_selection_workflow:
-    input:
-        expand("tables/pca/selected_{selected}_{cv_selected}.tsv", selected=[0,125], cv_selected=[0,1250])
+# "data/imputation/imputed/seed_1000/imputation_1.xlsx",
+# expand(
+#     "data/imputation{imputation_prefix}/imputed/seed_1000/imputation_1.xlsx",
+#     imputation_prefix="M",
+# ),
+# rule feature_selection_workflow:
+#    input:
+#        expand("tables/pca/selected_{selected}_{cv_selected}.tsv", selected=[0,125], cv_selected=[0,1250])
