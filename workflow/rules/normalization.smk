@@ -1,8 +1,8 @@
 rule normalize:
     input:
-        dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
+        dataset=rules.remove_metabolites_with_non_imputed_groups.output.dataset,
     output:
-        normalized="data/normalization/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
+        normalized="data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
     run:
         import numpy as np
 

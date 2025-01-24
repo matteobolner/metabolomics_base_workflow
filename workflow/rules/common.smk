@@ -30,5 +30,4 @@ wildcard_constraints:
     mice_seed="[^_]+",
     fold="[^_]+",
     seed_boruta="[^_/]+",
-    with_or_without="[^_/]+",
-    date="[^_/]+",
+    imputation_cycle="[^_/]+",

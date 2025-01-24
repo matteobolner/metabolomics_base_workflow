@@ -2,7 +2,7 @@ rule get_residuals:
     input:
         dataset=rules.normalize.output.normalized,
     output:
-        residuals="data/residuals/seed_{mice_seed}/imputation_{imp_cycle}.xlsx",
+        residuals="data/residuals/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
     run:
         dataset = MetaboTK().io.from_excel(
             input.dataset,
