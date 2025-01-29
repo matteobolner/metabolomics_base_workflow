@@ -3,8 +3,8 @@ from metabotk import MetaboTK
 
 ds = MetaboTK().io.from_excel(
     file_path=snakemake.input.dataset,
-    sample_id_column=snakemake.config.sample_id_column,
-    metabolite_id_column=snakemake.config.metabolite_id_column,
+    sample_id_column=snakemake.config["sample_id_column"],
+    metabolite_id_column=snakemake.config["metabolite_id_column"],
 )
 no_full_missing = ds.stats.remove_missing(on="metabolites", threshold=0.999999)
 ds_all_missing = ds.ops.drop(what="metabolites", ids=list(no_full_missing.columns))
@@ -17,3 +17,8 @@ sample_stats = ds.stats.sample_stats()
 
 sample_stats.to_csv(snakemake.output.sample_stats, index=True, sep="\t")
 metabolite_stats.to_csv(snakemake.output.metabolite_stats, index=True, sep="\t")
+
+
+pca = ds.viz.plot_pca_grid(
+    hue=snakemake.config["group_column"], savepath=snakemake.output.pca_plot
+)

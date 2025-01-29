@@ -7,10 +7,16 @@ chemical_annotation_sheet: "Chemical Annotation"
 data_sheet: "Data"
 
 #IMPUTATION:
-mice_imputation_covariates: ['AGE','BREED','GENDER']
+impute_groups_separately: True #write False to avoid separate imputation 
+imputation_group_column: "GENDER"
+imputation_groups: ["M","G"] 
+mice_imputation_covariates: ['AGE','BREED']
 mice_seeds: [1000,2000,3000,4000,5000]
 imputation_cycles: [1,2,3,4,5]
 super_pathway_column: "SUPER PATHWAY"
+
+#NORMALIZATION
+normalization_method: 'log'
 
 #RESIDUALS
 lm_formula: 'AGE + C(GENDER) + C(BREED)' # 
@@ -19,3 +25,8 @@ lm_formula: 'AGE + C(GENDER) + C(BREED)' #
 group_column: "GROUP NAME"
 group_name: "Compared groups"
 feature_selection_seeds: [10,20,30,40,50]
+boruta_method: "classifier" # alternative is regressor
+CV_method: "stratified_kfold" # alternative is LOO
+CV_stratification_column: "GENDER" 
+CV_folds_number: 10
+
