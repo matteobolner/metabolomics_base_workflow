@@ -14,7 +14,7 @@ use rule * from imputation_workflow_module as imp_*
 
 use rule setup_dataset from imputation_workflow_module as imp_setup_dataset with:
     input:
-        dataset="resources/test_dataset_fecal.xlsx",
+        dataset=config["raw_dataset"]
 
 
 rule remove_metabolites_with_non_imputed_groups:
