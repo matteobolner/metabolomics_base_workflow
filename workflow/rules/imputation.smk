@@ -19,8 +19,8 @@ use rule setup_dataset from imputation_workflow_module as imp_setup_dataset with
 
 rule remove_metabolites_with_non_imputed_groups:
     input:
-        dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
-        #dataset=rules.imp_imputation_workflow.input.dataset
+        #dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
+        dataset=rules.imp_imputation_workflow.input.dataset
     output:
         dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imputation_cycle}_no_missing.xlsx",
     run:
