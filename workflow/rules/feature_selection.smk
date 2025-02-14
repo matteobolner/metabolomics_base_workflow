@@ -1,14 +1,15 @@
 module feature_selection_module:
     snakefile:
-        github(
-            "matteobolner/metabolomics_feature_selection_workflow",
-            path="workflow/Snakefile",
-            branch="main",
-        )
+        "../../../metabolomics_feature_selection_workflow/workflow/Snakefile"
+    # github(
+    #     "matteobolner/metabolomics_feature_selection_workflow",
+    #     path="workflow/Snakefile",
+    #     branch="main",
+    # )
     config:
         config
     prefix:
-        "data/feature_selection/boruta/"
+        "data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/"
 
 
 use rule boruta from feature_selection_module with:
@@ -18,7 +19,11 @@ use rule boruta from feature_selection_module with:
 
 rule merge_boruta_across_imputations:
     input:
-        datasets=["data/feature_selection/boruta/summary.tsv"],
+        datasets=expand(
+            "data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
+            mice_seed=mice_seeds,
+            imputation_cycle=imputation_cycles,
+        ),
     output:
         summary="tables/feature_selection/boruta/summary.tsv",
     run:
@@ -31,18 +36,26 @@ rule merge_boruta_across_imputations:
         summed = reduce(lambda a, b: a.add(b, fill_value=0), dfs)
         summed.to_csv(output.summary, index=True, sep="\t")
 
+
 rule summarize_feature_selection_results:
     input:
-        dataset=rules.normalize.output.normalized,
-        boruta=rules.merge_boruta_across_imputations.output.summary
+        dataset=expand(
+            "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
+            mice_seed=mice_seeds[0],
+            imputation_cycle=imputation_cycles[0],
+        )[0],
+        boruta=rules.merge_boruta_across_imputations.output.summary,
     output:
         stats="tables/feature_selection/metabolite_level_stats.tsv",
     script:
         "../scripts/merge_stats.py"
+
+
 """
+
 rule annotate_dataset_with_boruta_results:
     input:
-        summary=rules.merge_boruta_across_imputations.output.summary,
+        summary=rules.summarize_boruta.output.summary,
         dataset=expand(
             rules.get_residuals.output.residuals,
             mice_seed=mice_seeds[0],
