@@ -1,11 +1,10 @@
 module feature_selection_module:
     snakefile:
-        "../../../metabolomics_feature_selection_workflow/workflow/Snakefile"
-    # github(
-    #     "matteobolner/metabolomics_feature_selection_workflow",
-    #     path="workflow/Snakefile",
-    #     branch="main",
-    # )
+        github(
+            "matteobolner/metabolomics_feature_selection_workflow",
+            path="workflow/Snakefile",
+            branch="main",
+        )
     config:
         config
     prefix:
