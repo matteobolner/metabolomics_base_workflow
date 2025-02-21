@@ -8,7 +8,10 @@ module feature_selection_module:
     config:
         config
     prefix:
-        "{config['feature_selection_prefix']}/data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/"
+        expand(
+            "{prefix}/data/feature_selection/boruta/mice_seed_{{mice_seed}}/imp_cycle_{{imputation_cycle}}/",
+            prefix={config["feature_selection_prefix"]},
+        )
 
 
 use rule boruta from feature_selection_module with:
