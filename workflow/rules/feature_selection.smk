@@ -9,8 +9,8 @@ module feature_selection_module:
         config
     prefix:
         expand(
-            "{prefix}/data/feature_selection/boruta/mice_seed_{{mice_seed}}/imp_cycle_{{imputation_cycle}}/",
-            prefix={config["feature_selection_prefix"]},
+            "{prefix}data/feature_selection/boruta/mice_seed_{{mice_seed}}/imp_cycle_{{imputation_cycle}}/",
+            prefix=config["feature_selection_prefix"],
         )[0]
 
 
@@ -22,9 +22,10 @@ use rule boruta from feature_selection_module with:
 rule merge_boruta_across_imputations:
     input:
         datasets=expand(
-            "data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
+            "{prefix}data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
             mice_seed=mice_seeds,
             imputation_cycle=imputation_cycles,
+            prefix=config["feature_selection_prefix"]
         ),
     output:
         summary="tables/feature_selection/boruta/summary.tsv",
@@ -42,9 +43,10 @@ rule merge_boruta_across_imputations:
 rule summarize_feature_selection_results:
     input:
         dataset=expand(
-            "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
+            "{prefix}data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
             mice_seed=mice_seeds[0],
             imputation_cycle=imputation_cycles[0],
+            prefix=config["feature_selection_prefix"]
         )[0],
         boruta=rules.merge_boruta_across_imputations.output.summary,
     output:
