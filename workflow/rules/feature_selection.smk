@@ -1,21 +1,12 @@
-rule get_boruta_script:
-    output:
-        script="workflow/scripts/feature_selection/boruta.py",
-    shell:
-        "curl https://raw.githubusercontent.com/matteobolner/metabolomics_feature_selection_workflow/refs/heads/main/workflow/scripts/boruta.py -o {output.script}"
-
-
 rule boruta:
     input:
-        script="workflow/scripts/feature_selection/boruta.py",
         dataset=rules.get_residuals.output.residuals,
     output:
         long_df="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/long_df.tsv",
         summary="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
     threads: 5
     script:
-        rules.get_boruta_script.output.script
-        #"../scripts/boruta.py"
+        "../scripts/boruta.py"
 
 
 rule merge_boruta_across_imputations:
@@ -38,6 +29,7 @@ rule merge_boruta_across_imputations:
         summed.to_csv(output.summary, index=True, sep="\t")
 
 
+
 rule summarize_feature_selection_results:
     input:
         datasets=expand(
@@ -53,6 +45,7 @@ rule summarize_feature_selection_results:
 
 
 """
+
 
 rule annotate_dataset_with_boruta_results:
     input:
@@ -76,3 +69,4 @@ rule annotate_dataset_with_boruta_results:
         ).set_index(config["metabolite_id_column"])
         dataset.io.save_excel(output.dataset)
 """
+
