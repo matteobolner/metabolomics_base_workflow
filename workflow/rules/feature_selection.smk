@@ -41,11 +41,11 @@ rule merge_boruta_across_imputations:
 
 rule summarize_feature_selection_results:
     input:
-        dataset=expand(
+        datasets=expand(
             "{{prefix}}data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
             mice_seed=mice_seeds[0],
             imputation_cycle=imputation_cycles[0],
-        )[0],
+        ),
         boruta=rules.merge_boruta_across_imputations.output.summary,
     output:
         stats=expand(

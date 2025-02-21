@@ -3,7 +3,7 @@ from metabotk import MetaboTK
 
 dataset = MetaboTK().io.from_excel(
     # "data/normalization/normalized.xlsx",
-    snakemake.input.dataset,
+    snakemake.input.datasets[0],
     sample_id_column="SampleIdentification",
     metabolite_id_column="Metabolite",
 )
