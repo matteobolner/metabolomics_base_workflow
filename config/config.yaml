@@ -1,3 +1,4 @@
+imputation_prefix: ""
 #DATASET
 raw_dataset: "resources/test_dataset_fecal.xlsx"
 sample_id_column: "SAMPLE NAME"

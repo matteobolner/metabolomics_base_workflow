@@ -8,7 +8,7 @@ module imputation_workflow_module:
     config:
         config
     prefix:
-        config["prefix"]
+        config["imputation_prefix"]
 
 
 use rule * from imputation_workflow_module as imp_*
