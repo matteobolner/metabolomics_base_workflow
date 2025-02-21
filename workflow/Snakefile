@@ -10,4 +10,4 @@ include: "rules/feature_selection.smk"
 
 rule all:
     input:
-        "tables/feature_selection/metabolite_level_stats.tsv"
+        "tables/feature_selection/metabolite_level_stats.tsv",

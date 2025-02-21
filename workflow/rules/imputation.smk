@@ -7,6 +7,8 @@ module imputation_workflow_module:
         )
     config:
         config
+    prefix:
+        config["prefix"]
 
 
 use rule * from imputation_workflow_module as imp_*
@@ -14,14 +16,13 @@ use rule * from imputation_workflow_module as imp_*
 
 use rule setup_dataset from imputation_workflow_module as imp_setup_dataset with:
     input:
-        dataset=config["raw_dataset"]
+        dataset=config["raw_dataset"],
 
 
 rule remove_metabolites_with_non_imputed_groups:
     input:
         #dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
-        dataset=rules.imp_get_imputations.output.dataset
-
+        dataset=rules.imp_get_imputations.output.dataset,
     output:
         dataset="data/imputation/imputed/seed_{mice_seed}/imputation_{imputation_cycle}_no_missing.xlsx",
     run:
