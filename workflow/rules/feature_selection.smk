@@ -14,7 +14,8 @@ rule boruta:
         summary="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
     threads: 5
     script:
-        "../scripts/boruta.py"
+        rules.get_boruta_script.output.script
+        #"../scripts/boruta.py"
 
 
 rule merge_boruta_across_imputations:
