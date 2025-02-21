@@ -6,7 +6,7 @@ rule boruta:
         summary="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
     threads: 5
     script:
-        "../scripts/boruta.py"
+        "../scripts/feature_selection/boruta.py"
 
 
 rule merge_boruta_across_imputations:
