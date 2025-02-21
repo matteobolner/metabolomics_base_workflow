@@ -11,7 +11,7 @@ module feature_selection_module:
         expand(
             "{prefix}/data/feature_selection/boruta/mice_seed_{{mice_seed}}/imp_cycle_{{imputation_cycle}}/",
             prefix={config["feature_selection_prefix"]},
-        )
+        )[0]
 
 
 use rule boruta from feature_selection_module with:
