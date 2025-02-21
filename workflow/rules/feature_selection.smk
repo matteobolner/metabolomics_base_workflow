@@ -1,11 +1,13 @@
 rule get_boruta_script:
     output:
-        script="../scripts/boruta.py"
+        script="workflow/scripts/feature_selection/boruta.py",
     shell:
         "curl https://raw.githubusercontent.com/matteobolner/metabolomics_feature_selection_workflow/refs/heads/main/workflow/scripts/boruta.py -o {output.script}"
 
+
 rule boruta:
     input:
+        script="workflow/scripts/feature_selection/boruta.py",
         dataset=rules.get_residuals.output.residuals,
     output:
         long_df="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/long_df.tsv",
@@ -14,10 +16,11 @@ rule boruta:
     script:
         "../scripts/boruta.py"
 
+
 rule merge_boruta_across_imputations:
     input:
         datasets=expand(
-            rules.boruta.output.summary, 
+            rules.boruta.output.summary,
             mice_seed=mice_seeds,
             imputation_cycle=imputation_cycles,
         ),
@@ -43,9 +46,7 @@ rule summarize_feature_selection_results:
         ),
         boruta=rules.merge_boruta_across_imputations.output.summary,
     output:
-        stats=expand(
-            "tables/feature_selection/metabolite_level_stats.tsv",
-        ),
+        stats="tables/feature_selection/metabolite_level_stats.tsv",
     script:
         "../scripts/merge_stats.py"
 
@@ -74,4 +75,3 @@ rule annotate_dataset_with_boruta_results:
         ).set_index(config["metabolite_id_column"])
         dataset.io.save_excel(output.dataset)
 """
-
