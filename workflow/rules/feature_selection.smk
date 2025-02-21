@@ -1,23 +1,18 @@
-module feature_selection_module:
-    snakefile:
-        github(
-            "matteobolner/metabolomics_feature_selection_workflow",
-            path="workflow/Snakefile",
-            branch="main",
-        )
-    config:
-        config
-    prefix:
-        expand(
-            "{prefix}data/feature_selection/boruta/mice_seed_{{mice_seed}}/imp_cycle_{{imputation_cycle}}/",
-            prefix=config["feature_selection_prefix"],
-        )[0]
+rule get_boruta_script:
+    output:
+        script="../scripts/boruta.py"
+    shell:
+        "curl https://raw.githubusercontent.com/matteobolner/metabolomics_feature_selection_workflow/refs/heads/main/workflow/scripts/boruta.py -o {output.script}"
 
-
-use rule boruta from feature_selection_module with:
+rule boruta:
     input:
-        dataset=rules.get_residuals.output.residuals,
-
+        dataset=rules.get_residuals.output.summary,
+    output:
+        long_df="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/long_df.tsv",
+        summary="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
+    threads: 5
+    script:
+        "../scripts/boruta.py"
 
 rule merge_boruta_across_imputations:
     input:
