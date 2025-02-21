@@ -6,7 +6,7 @@ rule get_boruta_script:
 
 rule boruta:
     input:
-        dataset=rules.get_residuals.output.summary,
+        dataset=rules.get_residuals.output.residuals,
     output:
         long_df="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/long_df.tsv",
         summary="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
