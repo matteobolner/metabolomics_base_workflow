@@ -68,6 +68,19 @@ stats[("Comparison", "CV Confirmed")] = stats["Metabolite ID"].apply(
     lambda x: boruta["CV_confirmed"].to_dict()[x]
 )
 
+stats[("Comparison", "Mann-Whitney U test statistic")] = stats["Metabolite ID"].apply(
+    lambda x: mann_whitney["mann_whitney_u_statistic"].to_dict()[x]
+)
+
+stats[("Comparison", "Mann-Whitney U test p-value")] = stats["Metabolite ID"].apply(
+    lambda x: mann_whitney["mann_whitney_p_value"].to_dict()[x]
+)
+
+stats[("Comparison", "AUC")] = stats["Metabolite ID"].apply(
+    lambda x: auc["AUC"].to_dict()[x]
+)
+
+
 metabolite_info = dataset.chemical_annotation
 metabolite_info.index.name = "Metabolite ID"
 metabolite_info.columns = pd.MultiIndex.from_tuples(
@@ -99,17 +112,4 @@ stats = stats.loc[
 ]
 
 stats = stats.sort_values(by=("Comparison", "Confirmed"), ascending=False)
-
-stats[("Comparison", "Mann-Whitney U test statistic")] = stats["Metabolite ID"].apply(
-    lambda x: mann_whitney["mann_whitney_u_statistic"].to_dict()[x]
-)
-
-stats[("Comparison", "Mann-Whitney U test p-value")] = stats["Metabolite ID"].apply(
-    lambda x: mann_whitney["mann_whitney_p_value"].to_dict()[x]
-)
-
-stats[("Comparison", "AUC")] = stats["Metabolite ID"].apply(
-    lambda x: auc["AUC"].to_dict()[x]
-)
-
 stats.to_csv(snakemake.output.stats, index=False, sep="\t")
