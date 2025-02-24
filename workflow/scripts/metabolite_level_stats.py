@@ -8,17 +8,23 @@ dataset = MetaboTK().io.from_excel(
     metabolite_id_column=snakemake.config["metabolite_id_column"],
 )
 
-boruta = pd.read_table(snakemake.input.boruta).set_index("metabolite")
-mann_whitney = pd.read_table(snakemake.input.mann_whitney).set_index(
-    snakemake.config["metabolite_id_column"]
-)
-auc = pd.read_table(snakemake.input.auc).set_index(
-    snakemake.config["metabolite_id_column"]
-)
-# raw_dataset.import_excel("data/extremes_raw/FCR/seed_1000_imputation_1.xlsx")
-# raw_dataset.import_excel(snakemake.input.raw_dataset)
-# dataset.data = raw_dataset.data
+
+dataset.data = raw_dataset.data
+
+# group_column='high_or_low'
 group_column = snakemake.config["group_column"]
+
+mw_tests = pd.read_table(snakemake.input.mann_whitney).set_index(
+    snakemake.config["metabolite_id_column"]
+)
+mw_tests = mw_tests[["mann_whitney_u_statistic", "mann_whitney_p_value"]].copy()
+mw_tests.columns = pd.MultiIndex.from_tuples(
+    [
+        ("Comparison", "Mann-Whitney U test statistic"),
+        ("Comparison", "Mann-Whitney U test p-value"),
+    ]
+)
+mw_tests.index.name = "Metabolite ID"
 
 
 def stats_selected(data, group):
@@ -33,8 +39,11 @@ def stats_selected(data, group):
     return stats
 
 
-split_data = dataset.ops.split(by="samples", columns=group_column)
+# dataset.sample_metadata[group_column]=dataset.sample_metadata[group_column]+"_FCR"
 
+dataset.sample_metadata[group_column] = dataset.sample_metadata[group_column]
+
+split_data = dataset.split_by_sample_column(group_column)
 split_data_stats = {k: stats_selected(v.data, k) for k, v in split_data.items()}
 data_values = list(split_data.values())
 stat_values = list(split_data_stats.values())
@@ -59,19 +68,31 @@ stats[("Comparison", "Median delta %")] = (
     / stat_values[0][(stat_keys[0], "median")]
 ) * 100
 
-stats = stats.round(2).reset_index()
+stats = stats.round(2)
 
+stats = stats.merge(mw_tests, left_index=True, right_index=True)
+
+stats = stats.reset_index()
+
+stats[("Comparison", "AUC")] = stats["Metabolite ID"].apply(
+    lambda x: dataset.chemical_annotation["AUC"].to_dict()[x]
+)
 stats[("Comparison", "Confirmed")] = stats["Metabolite ID"].apply(
-    lambda x: boruta["Confirmed"].to_dict()[x]
+    lambda x: dataset.chemical_annotation["Confirmed"].to_dict()[x]
 )
 stats[("Comparison", "CV Confirmed")] = stats["Metabolite ID"].apply(
-    lambda x: boruta["CV_confirmed"].to_dict()[x]
+    lambda x: dataset.chemical_annotation["CV_confirmed"].to_dict()[x]
 )
 
-metabolite_info = dataset.chemical_annotation
+metabolite_info = dataset.chemical_annotation[
+    ["PLOT_NAME", "SUPER_PATHWAY", "SUB_PATHWAY"]
+]
+metabolite_info = metabolite_info.sort_values(
+    by=["SUPER_PATHWAY", "SUB_PATHWAY", "CHEM_ID"]
+)
 metabolite_info.index.name = "Metabolite ID"
 metabolite_info.columns = pd.MultiIndex.from_tuples(
-    [("Metabolite", i) for i in metabolite_info.columns]
+    [("Metabolite", i) for i in ["Metabolite name", "Super pathway", "Sub pathway"]]
 )
 metabolite_info = metabolite_info.fillna("Unknown")
 
@@ -90,9 +111,9 @@ def code_from_super_pathway(input_string):
     return "".join(output).upper()
 
 
-stats[("Metabolite", "Super pathway code")] = stats[
-    ("Metabolite", snakemake.config["super_pathway_column"])
-].apply(code_from_super_pathway)
+# stats[("Metabolite", "Super pathway")] = stats[("Metabolite", "Super pathway")].apply(
+#    code_from_super_pathway
+# )
 
 stats = stats.loc[
     stats[("Comparison", "Mean delta %")].abs().sort_values(ascending=False).index
@@ -100,16 +121,11 @@ stats = stats.loc[
 
 stats = stats.sort_values(by=("Comparison", "Confirmed"), ascending=False)
 
-stats[("Comparison", "Mann-Whitney U test statistic")] = stats["Metabolite ID"].apply(
-    lambda x: mann_whitney["mann_whitney_u_statistic"].to_dict()[x]
+stats = stats.rename(
+    columns={
+        "Comparison": f"{snakemake.wildcards.trait}_Comparison",
+    }
 )
 
-stats[("Comparison", "Mann-Whitney U test p-value")] = stats["Metabolite ID"].apply(
-    lambda x: mann_whitney["mann_whitney_p_value"].to_dict()[x]
-)
-
-stats[("Comparison", "AUC")] = stats["Metabolite ID"].apply(
-    lambda x: auc["AUC"].to_dict()[x]
-)
 
 stats.to_csv(snakemake.output.stats, index=False, sep="\t")

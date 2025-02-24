@@ -29,22 +29,7 @@ rule merge_boruta_across_imputations:
         summed.to_csv(output.summary, index=True, sep="\t")
 
 
-
-rule summarize_feature_selection_results:
-    input:
-        datasets=expand(
-            "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
-            mice_seed=mice_seeds[0],
-            imputation_cycle=imputation_cycles[0],
-        ),
-        boruta=rules.merge_boruta_across_imputations.output.summary,
-    output:
-        stats="tables/feature_selection/metabolite_level_stats.tsv",
-    script:
-        "../scripts/merge_stats.py"
-
-
-"""
+        """
 
 
 rule annotate_dataset_with_boruta_results:
@@ -69,4 +54,3 @@ rule annotate_dataset_with_boruta_results:
         ).set_index(config["metabolite_id_column"])
         dataset.io.save_excel(output.dataset)
 """
-

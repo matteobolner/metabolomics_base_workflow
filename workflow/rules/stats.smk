@@ -24,3 +24,19 @@ rule pca:
         hue_title=config["group_name"],
     script:
         "../scripts/pca/pca.py"
+
+
+rule summarize_results:
+    input:
+        dataset=expand(
+            "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
+            mice_seed=mice_seeds[0],
+            imputation_cycle=imputation_cycles[0],
+        )[0],
+        boruta=rules.merge_boruta_across_imputations.output.summary,
+        mann_whitney=rules.mann_whitney.output.mann_whitney,
+        auc=rules.get_ROC_AUC.output.auc,
+    output:
+        stats="results/metabolite_level_stats.tsv",
+    script:
+        "../scripts/merge_stats.py"

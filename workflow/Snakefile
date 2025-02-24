@@ -3,6 +3,7 @@ include: "rules/imputation.smk"
 include: "rules/normalization.smk"
 include: "rules/residuals.smk"
 include: "rules/feature_selection.smk"
+include: "rules/univariate_analyses.smk"
 
 
 # include: "rules/stats.smk"
@@ -10,4 +11,4 @@ include: "rules/feature_selection.smk"
 
 rule all:
     input:
-        "tables/feature_selection/metabolite_level_stats.tsv",
+        "results/metabolite_level_stats.tsv",

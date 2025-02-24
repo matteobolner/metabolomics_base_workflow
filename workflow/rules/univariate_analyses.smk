@@ -2,15 +2,23 @@ rule get_ROC_AUC:
     input:
         dataset=rules.get_residuals.output.residuals,
     output:
-        auc="data/univariate_analyses/AUC/seed_{config['imputation_seeds'][0]}_imputation_1.tsv",
+        auc=expand(
+            "tables/univariate_analyses/AUC/seed_{mice_seed}_imputation_{imputation_cycle}.tsv",
+            mice_seed=mice_seeds[0],
+            imputation_cycle=imputation_cycles[0],
+        )[0],
     script:
         "../scripts/univariate_analyses/auc.py"
 
 
 rule mann_whitney:
     input:
-        dataset="data/extremes/{trait}/seed_1000_imputation_1.xlsx",
+        dataset=rules.get_residuals.output.residuals,
     output:
-        mann_whitney="data/univariate_analyses/{trait}/mann_whitney/seed_1000_imputation_1.tsv",
+        mann_whitney=expand(
+            "tables/univariate_analyses/mann_whitney/seed_{mice_seed}_imputation_{imputation_cycle}.tsv",
+            mice_seed=mice_seeds[0],
+            imputation_cycle=imputation_cycles[0],
+        )[0],
     script:
         "../scripts/univariate_analyses/mann_whitney.py"
