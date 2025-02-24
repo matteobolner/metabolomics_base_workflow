@@ -10,7 +10,7 @@ dataset = MetaboTK().io.from_excel(
     metabolite_id_column=snakemake.config["metabolite_id_column"],
 )
 
-split_data = dataset.ops.split(what="samples", by=snakemake.config["group_column"])
+split_data = dataset.ops.split(by="samples", on=snakemake.config["group_column"])
 data_values = list(split_data.values())
 
 mw_tests = {}
