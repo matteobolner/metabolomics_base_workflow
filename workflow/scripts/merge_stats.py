@@ -4,8 +4,8 @@ from metabotk import MetaboTK
 dataset = MetaboTK().io.from_excel(
     # "data/normalization/normalized.xlsx",
     snakemake.input.datasets[0],
-    sample_id_column="SampleIdentification",
-    metabolite_id_column="Metabolite",
+    sample_id_column=snakemake.config["sample_id_column"],
+    metabolite_id_column=snakemake.config["metabolite_id_column"],
 )
 
 # boruta = pd.read_table("tables/feature_selection/boruta/summary.tsv").set_index(
