@@ -12,7 +12,7 @@ rule initial_stats:
 
 rule pca:
     input:
-        dataset=rules.annotate_dataset_with_boruta_results.output.dataset,
+        dataset=rules.get_residuals.output.residuals,
     output:
         pca="tables/pca/selected_{selected}_{cv_selected}.tsv",
         pca_figure="figures/pca/selected_{selected}_{cv_selected}.png",
