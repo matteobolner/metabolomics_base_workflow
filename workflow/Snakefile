@@ -6,8 +6,6 @@ include: "rules/feature_selection.smk"
 include: "rules/univariate_analyses.smk"
 include: "rules/stats.smk"
 
-# include: "rules/stats.smk"
-
 
 rule all:
     input:
