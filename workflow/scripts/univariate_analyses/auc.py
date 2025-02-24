@@ -2,6 +2,7 @@ from metabotk import MetaboTK
 from sklearn import metrics
 
 dataset = MetaboTK().io.from_excel(
+    snakemake.input.dataset,
     sample_id_column=snakemake.config["sample_id_column"],
     metabolite_id_column=snakemake.config["metabolite_id_column"],
 )
