@@ -71,7 +71,7 @@ with Pool(
     processes=thread_number,
 ) as p:
     results = list(
-        p.map(
+        p.starmap(
             run_boruta,
             [(ds, i) for i in random_states],
         )
@@ -100,7 +100,7 @@ for i in cv_datasets:
 with Pool(
     processes=len(random_states),
 ) as p:
-    cv_results = list(p.map(run_boruta, cv_combinations))
+    cv_results = list(p.starmap(run_boruta, cv_combinations))
     p.close()
     p.join()
 
