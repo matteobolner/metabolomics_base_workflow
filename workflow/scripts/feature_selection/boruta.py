@@ -100,9 +100,9 @@ for i in cv_datasets:
 with Pool(
     processes=len(random_states),
 ) as p:
-    cv_results = list(
-        p.starmap(run_boruta, tqdm(cv_combinations, total=len(cv_combinations))),
-    )
+    cv_results = list(p.map(run_boruta, cv_combinations))
+    p.close()
+    p.join()
 
 long_df_CV, summary_CV = merge_boruta_results(cv_results)
 
