@@ -2,10 +2,14 @@ from metabotk import MetaboTK
 from tqdm import tqdm
 from multiprocessing import Pool
 import pandas as pd
-import io
-import contextlib
 
-dataset = MetaboTK().io.from_excel(
+
+# dataset = MetaboTK().io.from_excel(
+#    "../../projects/anas_breed_comparisons/LW_LA_DU/datasets/Landrace_vs_Duroc/data/residuals/seed_1000/imputation_1.xlsx",
+#    sample_id_column="PARENT_SAMPLE_NAME",
+# )
+
+ds = MetaboTK().io.from_excel(
     snakemake.input.dataset,
     sample_id_column=snakemake.config["sample_id_column"],
     metabolite_id_column=snakemake.config["metabolite_id_column"],
@@ -14,29 +18,35 @@ dataset = MetaboTK().io.from_excel(
     data_sheet=snakemake.config["data_sheet"],
 )
 
+ds.ops.subset(
+    what="samples",
+    ids=ds.sample_metadata[
+        ds.sample_metadata[snakemake.config["group_column"]].isin(
+            [snakemake.config["groups"]]
+        )
+    ].index,
+)
+
 
 def run_boruta(dataset, random_state):
-    with contextlib.redirect_stdout(io.StringIO()):
-        ranking = dataset.fs.boruta(
-            y_column=snakemake.config["group_column"],
-            kind=snakemake.config["boruta_method"],
-            threads=1,
-            random_state=random_state,
-            max_depth=None,
-            class_weight="balanced",
-            n_estimators="auto",
-            alpha=0.01,
-            max_iterations=1000,
-            output_dir=None,
-        )
-        ranking["decision"] = "Rejected"
-        ranking["decision"] = ranking["decision"].where(
-            ranking["rank"] > 2, "Tentative"
-        )
-        ranking["decision"] = ranking["decision"].where(
-            ranking["rank"] > 1, "Confirmed"
-        )
-        ranking["random_state"] = random_state
+    print(f"Running boruta with random state {random_state}", flush=True)
+    ranking = dataset.fs.boruta(
+        y_column=snakemake.config["group_column"],
+        kind=snakemake.config["boruta_method"],
+        threads=1,
+        random_state=random_state,
+        max_depth=None,
+        class_weight="balanced",
+        n_estimators="auto",
+        alpha=0.01,
+        max_iterations=1000,
+        output_dir=None,
+    )
+    ranking["decision"] = "Rejected"
+    ranking["decision"] = ranking["decision"].where(ranking["rank"] > 2, "Tentative")
+    ranking["decision"] = ranking["decision"].where(ranking["rank"] > 1, "Confirmed")
+    ranking["random_state"] = random_state
+    print(f"Boruta run finished: \n {ranking['decision'].value_counts()}", flush=True)
     return ranking
 
 
@@ -56,27 +66,29 @@ def merge_boruta_results(results):
 random_states = snakemake.config["feature_selection_seeds"]
 # random_states = [10, 20, 30, 40, 50]
 thread_number = snakemake.threads
-
+# thread_number=1
 with Pool(
     processes=thread_number,
 ) as p:
     results = list(
-        p.starmap(
+        p.map(
             run_boruta,
-            tqdm([(dataset, i) for i in random_states], total=len(random_states)),
+            [(ds, i) for i in random_states],
         )
     )
+    p.close()
+    p.join()
 
 
 long_df, summary = merge_boruta_results(results)
 
 if snakemake.config["CV_method"] == "stratified_kfold":
-    cv_datasets = dataset.fs.stratified_kfold(
+    cv_datasets = ds.fs.stratified_kfold(
         n_splits=snakemake.config["CV_folds_number"],
         stratification_column=snakemake.config["CV_stratification_column"],
     )["training_set"].values()
 elif snakemake.config["CV_method"] == "LOO":
-    cv_datasets = [dataset.ops.drop(what="samples", ids=[i]) for i in dataset.samples]
+    cv_datasets = [ds.ops.drop(what="samples", ids=[i]) for i in ds.samples]
 else:
     raise ValueError("Invalid CV method")
 
