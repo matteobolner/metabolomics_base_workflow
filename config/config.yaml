@@ -25,6 +25,7 @@ lm_formula: 'AGE + C(GENDER) + C(BREED)' #
 
 #FEATURE SELECTION
 group_column: "GROUP NAME"
+groups: ["AA","BB"]
 group_name: "Compared groups"
 feature_selection_seeds: [10,20,30,40,50]
 boruta_method: "classifier" # alternative is regressor

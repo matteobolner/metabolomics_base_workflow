@@ -4,7 +4,6 @@ rule boruta:
     output:
         long_df="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/long_df.tsv",
         summary="data/feature_selection/boruta/mice_seed_{mice_seed}/imp_cycle_{imputation_cycle}/summary.tsv",
-    threads: 5
     script:
         "../scripts/feature_selection/boruta.py"
 
