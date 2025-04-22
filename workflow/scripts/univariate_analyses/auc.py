@@ -86,7 +86,7 @@ for metabolite in dataset.metabolites:
         fprs[metabolite],
         tprs[metabolite],
         thresholds[metabolite],
-    ) = get_roc_curve(tempdata, metabolite, "breed")
+    ) = get_roc_curve(tempdata, metabolite, snakemake.config["group_column"])
     roc_aucs[metabolite] = metrics.auc(fprs[metabolite], tprs[metabolite])
 
 dataset.chemical_annotation["median_direction"] = (
