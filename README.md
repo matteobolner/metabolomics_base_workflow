@@ -27,3 +27,6 @@ The metabolomics dataset must be in excel format and contain the following sheet
 
 ![Alt text](./rulegraph.svg)
 
+## Citation
+If you use this workflow and want to cite it, you can cite our paper:
+[High-throughput untargeted metabolomics reveals metabolites and metabolic pathways that differentiate two divergent pig breeds](https://doi.org/10.1016/j.animal.2024.101393)
