@@ -1,7 +1,6 @@
 import pandas as pd
 from metabotk import MetaboTK
-
-# from scipy.stats import ttest_ind
+from statsmodels.stats.multitest import fdrcorrection
 from scipy.stats import mannwhitneyu
 
 dataset = MetaboTK().io.from_excel(
@@ -20,13 +19,9 @@ for i in dataset.metabolites:
 
 mw_tests = pd.DataFrame(mw_tests).transpose()
 mw_tests.columns = ["mann_whitney_u_statistic", "mann_whitney_p_value"]
+mw_tests["mann_whitney_p_value_FDR_corrected"] = fdrcorrection(
+    mw_tests["mann_whitney_p_value"]
+)[1]
 mw_tests["mann_whitney_u_statistic"] = mw_tests["mann_whitney_u_statistic"].round(2)
 mw_tests.index.name = snakemake.config["metabolite_id_column"]
 mw_tests.to_csv(snakemake.output.mann_whitney, index=True, sep="\t")
-
-# mw_tests.columns = pd.MultiIndex.from_tuples(
-#    [
-#        ("Comparison", "Mann-Whitney U test statistic"),
-#        ("Comparison", "Mann-Whitney U test p-value"),
-#    ]
-# )
