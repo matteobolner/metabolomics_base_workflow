@@ -75,6 +75,9 @@ stats[("Comparison", "Mann-Whitney U test statistic")] = stats["Metabolite ID"].
 stats[("Comparison", "Mann-Whitney U test p-value")] = stats["Metabolite ID"].apply(
     lambda x: mann_whitney["mann_whitney_p_value"].to_dict()[x]
 )
+stats[("Comparison", "Mann-Whitney U test p-value (FDR corrected)")] = stats[
+    "Metabolite ID"
+].apply(lambda x: mann_whitney["mann_whitney_p_value_FDR_corrected"].to_dict()[x])
 
 stats[("Comparison", "AUC")] = stats["Metabolite ID"].apply(
     lambda x: auc["AUC"].to_dict()[x]
