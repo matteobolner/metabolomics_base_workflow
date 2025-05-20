@@ -14,6 +14,10 @@ The metabolomics dataset must be in excel format and contain the following sheet
 * Metabolite abundance data
 
 ## Pipeline structure
+The summarized structure of this pipeline can be seen below (rulegraph.svg).
+For the full pipeline including the repeated steps to account for multiple random seeds, see dag.svg
+
+
 * Missing data imputation
     + Remove outlier values and samples/metabolites with too many missing values (> 25% by default)
     + Impute missing values with MICE predictive mean matching (pmm)
