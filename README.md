@@ -17,12 +17,12 @@ The metabolomics dataset must be in excel format and contain the following sheet
     + Remove outlier values and samples/metabolites with too many missing values (> 25% by default)
     + Impute missing values with MICE predictive mean matching (pmm)
 * Normalization (optional)
+* Removal of confounding effects (OLS regression)
 * Feature selection 
-    * Boruta 
+    * Boruta (Random Forest)
 * Differential metabolite analysis
     * Univariate analyses (Mann-Whitney, ROC AUC)
     * Multivariate analyses (Correlation networks) - not added to this repo yet
 
 ![Alt text](./rulegraph.svg)
-<img src="./rulegraph.svg">
 
