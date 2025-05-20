@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Bolner"
+  given-names: "Matteo"
+  orcid: "https://orcid.org/0000-0002-4985-0191"
+title: "High-throughput untargeted metabolomics reveals metabolites and metabolic pathways that differentiate two divergent pig breeds"
+version: 1.0.0
+doi: 10.1016/j.animal.2024.101393
+date-released: 2025-01-01
+url: "https://github.com/matteobolner/metabolomics_base_workflow"
