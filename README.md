@@ -3,8 +3,9 @@
 This repository contains a Snakemake pipeline to conduct metabolomics data analysis comparing two groups of samples in a robust manner, handling the random component on every step of the analysis.
 Most of the code to handle the metabolomics datasets is based on the `metabotk` python library (available at https://github.com/matteobolner/metabotk).
 Variants of this pipeline have been used to analyze metabolomics data in the following publications:  
-* [High-throughput untargeted metabolomics reveals metabolites and metabolic pathways that differentiate two divergent pig breeds](https://doi.org/10.1016/j.animal.2024.101393)
-
+* [High-throughput untargeted metabolomics reveals metabolites and metabolic pathways that differentiate two divergent pig breeds (Published)](https://doi.org/10.1016/j.animal.2024.101393)
+* Description of metabolic differences between castrated males and intact gilts obtained from
+high-throughput metabolomics of porcine plasma (Accepted for publication)
 ## Usage
 Edit the config.yaml file to define the dataset and analysis parameters.
 The metabolomics dataset must be in excel format and contain the following sheets:
