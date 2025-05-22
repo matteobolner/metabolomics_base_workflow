@@ -17,7 +17,8 @@ sns.set_context(
     },
 )
 
-group_column = snakemake.config.group_column
+group_column = snakemake.config["group_column"]
+new_title = snakemake.config["group_name"]
 
 dataset = MetaboTK().io.from_excel(
     snakemake.input.dataset,
@@ -28,7 +29,6 @@ dataset = MetaboTK().io.from_excel(
     data_sheet=snakemake.config["data_sheet"],
 )
 
-new_title = snakemake.params.hue_title
 
 pca, pca_object = dataset.dimred.get_pca(n_components=3, get_pca_object=True)
 pca.to_csv(snakemake.output.pca, sep="\t")
