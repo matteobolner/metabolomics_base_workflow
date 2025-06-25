@@ -22,3 +22,15 @@ rule mann_whitney:
         mann_whitney="tables/univariate_analyses/mann_whitney.tsv",
     script:
         "../scripts/univariate_analyses/mann_whitney.py"
+
+rule wilcoxon:
+    input:
+        dataset=expand(
+            rules.get_residuals.output.residuals,
+            mice_seed=mice_seeds[0],
+            imputation_cycle=imputation_cycles[0],
+        )[0],
+    output:
+        wilcoxon="tables/univariate_analyses/wilcoxon.tsv",
+    script:
+        "../scripts/univariate_analyses/wilcoxon.py"

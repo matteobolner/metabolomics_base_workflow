@@ -20,23 +20,38 @@ rule pca:
         pc1_pc3_figure="figures/pca/selected_{selected}_{cv_selected}_PC1_PC3.png",
         explained_variance="tables/pca/selected_{selected}_{cv_selected}_explained_variance.tsv",
     params:
-        group_column=config["group_column"],
         hue_title=config["group_name"],
     script:
         "../scripts/pca/pca.py"
 
 
-rule summarize_results:
-    input:
-        dataset=expand(
-            "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
-            mice_seed=mice_seeds[0],
-            imputation_cycle=imputation_cycles[0],
-        )[0],
-        boruta=rules.merge_boruta_across_imputations.output.summary,
-        mann_whitney=rules.mann_whitney.output.mann_whitney,
-        auc=rules.get_ROC_AUC.output.auc,
-    output:
-        stats="results/metabolite_level_stats.tsv",
-    script:
-        "../scripts/merge_stats.py"
+if config["paired_samples"]:
+    rule summarize_results:
+        input:
+            dataset=expand(
+                "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
+                mice_seed=mice_seeds[0],
+                imputation_cycle=imputation_cycles[0],
+            )[0],
+            boruta=rules.merge_boruta_across_imputations.output.summary,
+            wilcoxon=rules.mann_whitney.output.wilcoxon,
+            auc=rules.get_ROC_AUC.output.auc,
+        output:
+            stats="results/metabolite_level_stats.tsv",
+        script:
+            "../scripts/merge_stats_paired.py"
+else:
+    rule summarize_results:
+        input:
+            dataset=expand(
+                "data/normalization/seed_{mice_seed}/imputation_{imputation_cycle}.xlsx",
+                mice_seed=mice_seeds[0],
+                imputation_cycle=imputation_cycles[0],
+            )[0],
+            boruta=rules.merge_boruta_across_imputations.output.summary,
+            mann_whitney=rules.mann_whitney.output.mann_whitney,
+            auc=rules.get_ROC_AUC.output.auc,
+        output:
+            stats="results/metabolite_level_stats.tsv",
+        script:
+            "../scripts/merge_stats.py"
