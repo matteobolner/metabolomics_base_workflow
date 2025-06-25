@@ -17,6 +17,7 @@ sns.set_context(
     },
 )
 
+
 group_column = snakemake.config["group_column"]
 new_title = snakemake.config["group_name"]
 
@@ -44,18 +45,37 @@ pca_grid = dataset.viz.plot_pca_grid(
 )
 
 plt.clf()
-pc1_pc2 = dataset.viz.plot_pca(
-    hue=group_column,
+
+pc1_pc2 = sns.scatterplot(
+    data=pca,
     x="PC1",
     y="PC2",
+    hue="Breed",
+    s=125,
+    edgecolor=None,
+    palette=["#FFC20A", "#0C7BDC"],
+)
+pc1_pc2.set(
+    xlabel=f"PC1 ({explained_variance.loc['PC1']['Explained variance (%)']}%)",
+    ylabel=f"PC2 ({explained_variance.loc['PC2']['Explained variance (%)']}%)",
 )
 pc1_pc2.legend().set_title(new_title)
 pc1_pc2.figure.savefig(snakemake.output.pc1_pc2_figure)
 pc1_pc2.figure.clf()
-pc1_pc3 = dataset.viz.plot_pca(
-    hue=group_column,
+
+
+pc1_pc3 = sns.scatterplot(
+    data=pca,
     x="PC1",
     y="PC3",
+    hue="Breed",
+    s=125,
+    edgecolor=None,
+    palette=["#FFC20A", "#0C7BDC"],
+)
+pc1_pc3.set(
+    xlabel=f"PC1 ({explained_variance.loc['PC1']['Explained variance (%)']}%)",
+    ylabel=f"PC3 ({explained_variance.loc['PC3']['Explained variance (%)']}%)",
 )
 pc1_pc3.legend().set_title(new_title)
 pc1_pc3.figure.savefig(snakemake.output.pc1_pc3_figure)
