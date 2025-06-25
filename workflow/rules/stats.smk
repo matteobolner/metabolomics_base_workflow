@@ -9,10 +9,10 @@ rule initial_stats:
     script:
         "../scripts/stats/raw_dataset_stats.py"
 
-
+"""
 rule pca:
     input:
-        dataset=rules.get_residuals.output.residuals,
+        dataset=expand(rules.get_residuals.output.residuals, mice_seed=config["mice_seeds"][0], imputation_cycle=config["imputation_cycles"][0])[0],
     output:
         pca="tables/pca/selected_{selected}_{cv_selected}.tsv",
         pca_figure="figures/pca/selected_{selected}_{cv_selected}.png",
@@ -23,7 +23,7 @@ rule pca:
         hue_title=config["group_name"],
     script:
         "../scripts/pca/pca.py"
-
+"""
 
 if config["paired_samples"]:
     rule summarize_results:
