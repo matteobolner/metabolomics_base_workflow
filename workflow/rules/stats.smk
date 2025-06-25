@@ -34,7 +34,7 @@ if config["paired_samples"]:
                 imputation_cycle=imputation_cycles[0],
             )[0],
             boruta=rules.merge_boruta_across_imputations.output.summary,
-            wilcoxon=rules.mann_whitney.output.wilcoxon,
+            wilcoxon=rules.wilcoxon.output.wilcoxon,
             auc=rules.get_ROC_AUC.output.auc,
         output:
             stats="results/metabolite_level_stats.tsv",
