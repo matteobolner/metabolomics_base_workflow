@@ -51,15 +51,15 @@ for k, v in split_data_stats.items():
 
 stats[("Comparison", "Mean delta %")] = (
     (
-        split_data[stat_keys[snakemake.config["group_order"][0]]].data
-        - split_data[stat_keys[snakemake.config["group_order"][1]]].data
+        split_data[snakemake.config["group_order"][0]].data
+        - split_data[snakemake.config["group_order"][1]].data
     ).mean()
 ) * 100
 
 stats[("Comparison", "Median delta %")] = (
     (
-        split_data[stat_keys[snakemake.config["group_order"][0]]].data
-        - split_data[stat_keys[snakemake.config["group_order"][1]]].data
+        split_data[snakemake.config["group_order"][0]].data
+        - split_data[snakemake.config["group_order"][1]].data
     ).median()
 ) * 100
 stats = stats.round(2).reset_index()
