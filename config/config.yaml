@@ -33,3 +33,5 @@ CV_method: "stratified_kfold" # alternative is LOO
 CV_stratification_column: "GENDER" 
 CV_folds_number: 10
 
+#FOR PAIRED ANALYSIS
+group_order: ["BB","AA"] # for mean/median delta, will be calculated as BB - AA
